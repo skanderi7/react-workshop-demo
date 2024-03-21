@@ -4,7 +4,6 @@ import TodoContainer from "./components/TodoContainer";
 import TodoItem from "./components/TodoItem";
 
 function App() {
-  // The state of the todo items.
   const [todoItems, setTodoItems] = useState([
     {
       key: 0,
@@ -13,7 +12,6 @@ function App() {
     },
   ]);
 
-  // functions to delete, complete, and add todo items.
   const deleteTodo = (key) => {
     const newTodoItems = todoItems.filter((item) => item.key !== key);
     setTodoItems(newTodoItems);
@@ -31,17 +29,36 @@ function App() {
 
   const addTodo = (title) => {
     const key = Date.now();
-    // TODO: Implement addTodo
+    setTodoItems((prev) => [...prev, { key: key, completed: false, title: title}]);
   };
 
-  // The main app component
   return (
     <div className="App">
       <header className="header">
-        <h1>Todo List</h1>
+        <h1>My Todo List</h1>
       </header>
       <div className="body-container">
-        {/*TODO: Implement TodoContainer and TodoItem*/}
+        <TodoContainer name="My Daily Tasks">
+          <input
+            type="text"
+            placeholder="Add a todo"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                addTodo(e.target.value);
+                e.target.value = "";
+              }
+            }}
+          />
+          {todoItems.map((item) => (
+            <TodoItem
+              key={item.key}
+              completed={item.completed}
+              title={item.title}
+              onDelete={() => deleteTodo(item.key)}
+              onComplete={() => completeTodo(item.key)}
+            />
+          ))}
+        </TodoContainer>
       </div>
     </div>
   );
